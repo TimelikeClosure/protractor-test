@@ -1,6 +1,7 @@
 
 const exec = require('child_process').exec;
 
+// const webdriver = '"./node_modules/.bin/webdriver-manager"';
 const webdriver = '"./node_modules/.bin/webdriver-manager.cmd"';
 
 const wdUpdate = exec(`${webdriver} update`);
@@ -19,6 +20,7 @@ wdUpdate.on('exit', code => {
     const wdStart = exec(`${webdriver} start`);
 
     const timer = setTimeout(function(){
+        // const test = exec('"./node_modules/.bin/protractor" conf.js');
         const test = exec('"./node_modules/.bin/protractor.cmd" conf.js');
 
         test.stdout.on('data', function(data){
@@ -28,7 +30,6 @@ wdUpdate.on('exit', code => {
             console.log(`stderr: ${data}`);
         });
         test.on('close', (code) => {
-            clearTimeout(timer);
             console.log(`testing process exited with code ${code}`);
             wdStart.kill('SIGKILL');
         });
@@ -42,6 +43,7 @@ wdUpdate.on('exit', code => {
     });
     wdStart.on('exit', code => {
         if (code){
+            clearTimeout(timer);
             console.log(`webdriver-manager start exited with code ${code}`);
         }
     });
